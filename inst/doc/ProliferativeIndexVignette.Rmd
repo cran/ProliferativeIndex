@@ -1,0 +1,95 @@
+---
+title: "ProliferativeIndex Vignette"
+author: "Brittany N. Lasseigne, PhD and Ryne C. Ramaker"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ProliferativeIndex Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The ProliferativeIndex R package^[Ramaker and Lasseigne, et al. bioRxiv, 2016.] provides users with R functions for calculating and analyzing the proliferative index (PI) from an RNA-seq dataset.  
+
+The PI was adapted from Venet, et al.^[Venet, et al. PLoS Computational Biology, 2011 and Ge, et al. Genomics, 2005.]:
+
+> "The proliferating cell nuclear antigen, PCNA, is a ring-shaped protein that encircles DNA and regulates several processes leading to DNA replication.  As suggested by its name, this is one of the most widely used antigen target for immunohistochemical measures of the fraction of proliferating cells in tissues.  Ge et al. profiled with microarrays 36 tissues from normal, healthy individuals encompassing 27 organs.  We call 'meta-PCNA' the signature composed of the 1% genes the most positively correlated with PCNA expression across these 36 tissues.  In plain language, meta-PCNA genes are consistently expressed when PCNA is expressed in normal tissues and consistently repressed when PCNA is repressed.  We define the meta-PCNA index as the median expressin of meta-PCNA genes."
+
+IMPORTANT:
+Proliferative Indices are only interpretable relative to other PIs.  For example, higher/lower PI in tumors compared to normal tissues or in post-mitotic tissues compared to in tissues with high rates of cell turnover.  Additionally, PI is measuring proliferation associated with expression (as described above) and not necessarily proliferation itself.
+
+
+ProliferativeIndex contains the following functions:
+
+- `readDataForPI` : Read in user data for use with package functions
+- `calculatePI` :  Calculate PI for user data
+- `comparePI` : Compare PI across user data set
+- `compareModeltoPI` : Compare PI to model PCs
+
+## Example Data Set
+
+Included with ProliferativeIndex specifically for use with this vignette is data from the The Cancer Genome Atlas (TCGA) Adrenocortical Carcinoma (ACC) dataset.^[The TCGA ACC dataset was obtained from the TCGA data portal (tcga-data.nci.nih.gov) in June 2015.  Level 3 RNASeqV2 raw count data was variance stabalized with the DESeq2 v1.8.2 'varianceStabilizingTransformation'.] 
+
+After first loading the ProliferativeIndex library:
+```{r, include=TRUE}
+library(ProliferativeIndex)
+```
+This dataset, `vstTCGA_ACCData_sub` can be accessed from the package:
+```{r, include=TRUE}
+data(vstTCGA_ACCData_sub)
+
+#Examine only the first few columns and rows because the dataset is large (20501 genes x 10 samples):
+dim(vstTCGA_ACCData_sub)
+#Note that sample IDs are column names and HGNC gene IDs (http://www.genenames.org) are rownames and that vst data is numeric.
+str(vstTCGA_ACCData_sub)
+knitr::kable(vstTCGA_ACCData_sub[1:5,1:5])
+```
+
+## readDataForPI function
+
+Functions in the ProliferativeIndex package come with help pages that can be accessed as usual (for example, `?readDataForPI`).
+
+The function `readDataForPI` is used to read data in for use with the ProliferativeIndex package.
+
+```{r, include=TRUE}
+#Inputs are the user's vst dataframe and a model of interest for examining PI:
+exampleTCGAData<-readDataForPI(vstTCGA_ACCData_sub, c("AIFM3", "ATP9B", "CTRC", "MCL1", "MGAT4B", "ODF2L", "SNORA65", "TPPP2"))
+
+#examine output which is a list of two objects:
+# exampleTCGAData$vstData is the user's vst dataframe and exampleTCGAData$modelIDs is a character string of the user's gene IDs for their model of interest
+str(exampleTCGAData)
+```
+*note, the R package includes a data object, 'exReadDataObj' that is the output from the readDataForPI function for comparison
+
+### calculatePI function
+
+The function `calculatePI` calculates PI for all sample's in the users vst dataframe using a list of PCNA-associated genes collected from Venet et al. (including alternative gene names).
+
+*note, the function will print to the screen how many genes used to calculate the PI were found in the vstData
+
+```{r, include=TRUE}
+proliferativeIndices<-calculatePI(exampleTCGAData)
+summary(proliferativeIndices)
+
+#Examine function output:
+knitr::kable(head(proliferativeIndices))
+```
+*note, the R package includes a data object, 'exVSTPI' that is the output from the calculatePI function for comparison
+
+## comparePI function
+This function will summarize the PI values within the user's dataset.
+
+```{r, echo=FALSE, results='asis'}
+comparePI(proliferativeIndices)
+```
+*note, the R package includes a data object, 'exVSTPI' that is the output from the calculatePI function for comparison
+
+## compareModeltoPI function
+
+The function `compareModeltoPI` will take, as input, the user's data and model identifiers and compare to PI:
+
+```{r, include=TRUE}
+modelComparison<-compareModeltoPI(exampleTCGAData, proliferativeIndices)
+#the output is a table, inspect:
+knitr::kable(modelComparison)
+```
