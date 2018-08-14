@@ -22,9 +22,6 @@ str(exampleTCGAData)
 proliferativeIndices<-calculatePI(exampleTCGAData)
 summary(proliferativeIndices)
 
-#Examine function output:
-knitr::kable(head(proliferativeIndices))
-
 ## ---- echo=FALSE, results='asis'-----------------------------------------
 comparePI(proliferativeIndices)
 

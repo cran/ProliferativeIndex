@@ -70,9 +70,6 @@ The function `calculatePI` calculates PI for all sample's in the users vst dataf
 ```{r, include=TRUE}
 proliferativeIndices<-calculatePI(exampleTCGAData)
 summary(proliferativeIndices)
-
-#Examine function output:
-knitr::kable(head(proliferativeIndices))
 ```
 *note, the R package includes a data object, 'exVSTPI' that is the output from the calculatePI function for comparison
 

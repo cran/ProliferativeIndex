@@ -15,4 +15,3 @@ This function allows the user to read in data for subsequent proliferative index
 \examples{
 calculatePI(exReadDataObj)
 }
-

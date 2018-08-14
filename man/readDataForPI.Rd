@@ -18,4 +18,3 @@ This function allows the user to read in variance stabalized RNA-seq data and ge
 readDataForPI(vstTCGA_ACCData_sub, c("AIFM3", "ATP9B", "CTRC", "MCL1", 
 "MGAT4B", "ODF2L", "SNORA65", "TPPP2"))
 }
-

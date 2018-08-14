@@ -15,4 +15,3 @@ This function allows the user to examine a summary and plot of their PIs
 \examples{
 comparePI(exVSTPI)
 }
-

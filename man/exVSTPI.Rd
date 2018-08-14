@@ -12,4 +12,3 @@ data(exVSTPI)
 This object is the output from calculatePI from the exReadDataObj as input.
 }
 \keyword{datasets}
-

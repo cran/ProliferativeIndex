@@ -17,4 +17,3 @@ This function allows the user to calculate a correlation between their model and
 \examples{
 compareModeltoPI(exReadDataObj, exVSTPI)
 }
-

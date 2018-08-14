@@ -9,7 +9,7 @@
 
 calculatePI<-function(userObject){
   dataframePIvst<-subset(userObject$vstData, rownames(userObject$vstData) %in% metaPCNA2)
-  vstPI<-apply(userObject$vstData, 2, stats::median)
+  vstPI<-apply(dataframePIvst, 2, stats::median)
   print(paste("vstData contained ", nrow(dataframePIvst), "/131 of the PI-associated genes", sep=""))
   invisible(vstPI)
   }
